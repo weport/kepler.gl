@@ -72,6 +72,14 @@ import {Layer, LayerClasses} from 'layers';
 import {DEFAULT_TEXT_LABEL} from 'layers/layer-factory';
 import {EDITOR_MODES, SORT_ORDER} from 'constants/default-settings';
 
+
+// type imports
+/** @typedef {import('./vis-state-updater').Filter} Filter */
+/** @typedef {import('./vis-state-updater').KeplerDataset} KeplerDataset */
+/** @typedef {import('./vis-state-updater').KeplerField} KeplerField */
+/** @typedef {import('./vis-state-updater').VisState} VisState */
+/** @typedef {import('./vis-state-updater').KeplerDatasets} KeplerDatasets */
+
 // react-palm
 // disable capture exception for react-palm call to withTask
 disableStackCapturing();
