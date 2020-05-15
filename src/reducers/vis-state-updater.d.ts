@@ -50,36 +50,6 @@ export type KeplerDatasets = {
   [key: string]: KeplerDataset;
 };
 
-export type VisState = {
-  mapInfo: {
-    title: string;
-    description: string;
-  };
-  layers: any[];
-  layerData: any[];
-  layerToBeMerged: any[];
-  layerOrder: number[];
-
-  filters: Filter[];
-  filterToBeMerged: any[];
-
-  datasets: KeplerDatasets;
-  editingDataset: string | undefined;
-
-  interactionConfig: any;
-  interactionToBeMerged: any;
-
-  layerBlending: string;
-  hoverInfo: any;
-  clicked: any;
-  mousePos: any;
-
-  spliMaps: any[];
-  layerClasses: any;
-  animationConfig: any;
-  editor: any;
-};
-
 export type Filter = {
   dataId: string[];
   id: string;
@@ -147,5 +117,30 @@ export class Layer {
   id: string;
   config: LayerConfig;
 }
+
+export type VisState = {
+  mapInfo: {
+    title: string;
+    description: string;
+  };
+  layers: any[];
+  layerData: any[];
+  layerToBeMerged: any[];
+  layerOrder: number[];
+  filters: Filter[];
+  filterToBeMerged: any[];
+  datasets: KeplerDatasets;
+  editingDataset: string | undefined;
+  interactionConfig: any;
+  interactionToBeMerged: any;
+  layerBlending: string;
+  hoverInfo: any;
+  clicked: any;
+  mousePos: any;
+  spliMaps: any[];
+  layerClasses: any;
+  animationConfig: any;
+  editor: any;
+};
 
 export const INITIAL_VIS_STATE: VisState;
