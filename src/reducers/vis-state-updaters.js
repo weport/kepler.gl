@@ -71,7 +71,6 @@ import {
 import {Layer, LayerClasses} from 'layers';
 import {DEFAULT_TEXT_LABEL} from 'layers/layer-factory';
 import {EDITOR_MODES, SORT_ORDER} from 'constants/default-settings';
-import { any } from 'prop-types';
 
 
 // type imports

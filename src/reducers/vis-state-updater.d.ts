@@ -10,46 +10,6 @@ export type KeplerField = {
   type: string;
   filterProps?: any;
 };
-
-export type KeplerDataset = {
-  id: string;
-  label?: string;
-  color: RGBColor;
-
-  // fields and data
-  fields: KeplerField[];
-  allData: any[][];
-
-  allIndexes: number[];
-  filteredIndex: number[];
-  filteredIndexForDomain: number[];
-  fieldPairs: {
-    defaultName: string;
-    pair: any;
-    suffix: string[];
-  }[];
-  gpuFilter: {
-    filterRange: number[][];
-    filterValueUpdateTriggers: any;
-    filterValueAccessor: any;
-  };
-  metadata: any;
-  filterRecord: {
-    dynamicDomain: any;
-    fixedDomain: any;
-    cpu: any;
-    gpu: any;
-  };
-  changedFilters: any;
-
-  // table-injected metadata
-  metadata?: object;
-};
-
-export type KeplerDatasets = {
-  [key: string]: KeplerDataset;
-};
-
 export type Filter = {
   dataId: string[];
   id: string;
@@ -79,6 +39,56 @@ export type Filter = {
   // gpu filter
   gpu: boolean;
   gpuChannel: number[];
+};
+
+export type FilterRecord = {
+  dynamicDomain: Filter[];
+  fixedDomain: Filter[];
+  cpu: Filter[];
+  gpu: Filter[];
+};
+
+export type KeplerDataset = {
+  id: string;
+  label?: string;
+  color: RGBColor;
+
+  // fields and data
+  fields: KeplerField[];
+  allData: any[][];
+
+  allIndexes: number[];
+  filteredIndex: number[];
+  filteredIdxCPU: number[];
+  filteredIndexForDomain: number[];
+  fieldPairs: {
+    defaultName: string;
+    pair: any;
+    suffix: string[];
+  }[];
+  gpuFilter: {
+    filterRange: number[][];
+    filterValueUpdateTriggers: any;
+    filterValueAccessor: any;
+  };
+  filterRecord: FilterRecord;
+  filterRecordCPU: FilterRecord;
+  changedFilters: any;
+
+  // table-injected metadata
+  sortColumn?: {
+    // column name: sorted idx
+    [key: string]: number[];
+  };
+  sortOrder?: string; // ASCENDING | DESCENDING | UNSORT
+
+  pinnedColumns?: string[];
+  // table-injected metadata
+  metadata?: object;
+};
+
+export type KeplerDatasets = {
+  [key: string]: KeplerDataset;
 };
 
 export type LayerConfig = {
@@ -117,7 +127,15 @@ export class Layer {
   id: string;
   config: LayerConfig;
 }
-
+export type Editor = {
+  mode: string;
+  features: any[];
+  selectedFeature: any;
+  visible: boolean;
+};
+export type SplitMap = {
+  layers: {[key: string]: boolean};
+};
 export type VisState = {
   mapInfo: {
     title: string;
@@ -137,10 +155,12 @@ export type VisState = {
   hoverInfo: any;
   clicked: any;
   mousePos: any;
-  spliMaps: any[];
-  layerClasses: any;
+  layerClasses: {
+    [key: string]: any
+  };
   animationConfig: any;
   editor: any;
+  splitMaps: SplitMap[];
 };
 
 export const INITIAL_VIS_STATE: VisState;

@@ -21,12 +21,12 @@
     "strict": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "baseUrl": "."
+    "baseUrl": "./src"
   },
   "include": [
-    "src/actions"
+    "src"
   ],
   "exclude": [
-    "**/dist"
+    "dist"
   ]
 }
