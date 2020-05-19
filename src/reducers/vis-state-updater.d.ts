@@ -1,15 +1,5 @@
-export type RGBColor = [number, number, number];
-export type RGBAColor = [number, number, number, number];
+import {KeplerField, RGBColor, RGBAColor} from './types';
 
-export type KeplerField = {
-  analyzerType: string;
-  id: string;
-  name: string;
-  format: string;
-  tableFieldIndex: numberstring;
-  type: string;
-  filterProps?: any;
-};
 export type Filter = {
   dataId: string[];
   id: string;
@@ -91,42 +81,6 @@ export type KeplerDatasets = {
   [key: string]: KeplerDataset;
 };
 
-export type LayerConfig = {
-  dataId: string | null;
-  label: string;
-  color: RGBColor;
-
-  columns: any;
-  isVisible: boolean;
-  isConfigActive: boolean;
-  highlightColor: RGBColor | RGBAColor;
-  hidden: boolean;
-
-  colorField: KeplerField | null;
-  colorDomain: any;
-  colorScale: string;
-
-  // color by size, domain is set by filters, field, scale type
-  sizeDomain: any;
-  sizeScale: string;
-  sizeField: KeplerField | null;
-
-  visConfig: any;
-  textLabel: any;
-
-  colorUI: {
-    color: any;
-    colorRange: any;
-  };
-  animation: {
-    enabled: boolean;
-  };
-};
-
-export class Layer {
-  id: string;
-  config: LayerConfig;
-}
 export type Editor = {
   mode: string;
   features: any[];
@@ -135,6 +89,11 @@ export type Editor = {
 };
 export type SplitMap = {
   layers: {[key: string]: boolean};
+};
+export type AnimationConfig = {
+  domain: number[] | null,
+  currentTime: number | null,
+  speed: number
 };
 export type VisState = {
   mapInfo: {
@@ -158,8 +117,8 @@ export type VisState = {
   layerClasses: {
     [key: string]: any
   };
-  animationConfig: any;
-  editor: any;
+  animationConfig: AnimationConfig;
+  editor: Editor;
   splitMaps: SplitMap[];
 };
 

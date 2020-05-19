@@ -76,7 +76,7 @@ import {EDITOR_MODES, SORT_ORDER} from 'constants/default-settings';
 // type imports
 /** @typedef {import('./vis-state-updater').Filter} Filter */
 /** @typedef {import('./vis-state-updater').KeplerDataset} KeplerDataset */
-/** @typedef {import('./vis-state-updater').KeplerField} KeplerField */
+/** @typedef {import('./types').KeplerField} KeplerField */
 /** @typedef {import('./vis-state-updater').VisState} VisState */
 /** @typedef {import('./vis-state-updater').KeplerDatasets} KeplerDatasets */
 
@@ -137,15 +137,13 @@ export const DEFAULT_EDITOR = {
   visible: true
 };
 
-// /**
-//  * Default initial `visState`
-//  * @memberof visStateUpdaters
-//  * @constant
-//  * @type {VisState}
-//  * @public
-//  */
-
-/** @type {VisState} */
+/**
+ * Default initial `visState`
+ * @memberof visStateUpdaters
+ * @constant
+ * @type {VisState}
+ * @public
+ */
 export const INITIAL_VIS_STATE = {
   // map info
   mapInfo: {
@@ -864,13 +862,13 @@ export const reorderLayerUpdater = (state, {order}) => ({
  * @memberof visStateUpdaters
  * @param {Object} state `visState`
  * @param {Object} action action
- * @param {string} action.key dataset id
+ * @param {string} action.dataId dataset id
  * @returns {Object} nextState
  * @public
  */
 export const removeDatasetUpdater = (state, action) => {
   // extract dataset key
-  const {key: datasetKey} = action;
+  const {dataId: datasetKey} = action;
   const {datasets} = state;
 
   // check if dataset is present
@@ -1061,7 +1059,7 @@ export function interactionConfigChangeUpdater(state, action) {
   };
 
   if (config.id === 'geocoder' && !config.enabled) {
-    return removeDatasetUpdater(newState, {key: 'geocoder_dataset'});
+    return removeDatasetUpdater(newState, {dataId: 'geocoder_dataset'});
   }
 
   return newState;

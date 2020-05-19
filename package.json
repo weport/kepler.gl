@@ -47,6 +47,7 @@
     "add-licence": "uber-licence",
     "prepublish": "uber-licence && yarn build && yarn build:umd",
     "docs": "babel-node ./scripts/documentation.js",
+    "typedoc": "typedoc --theme markdown --out typedoc ./src/actions/vis-state-actions.js",
     "example-version": "babel-node ./scripts/edit-version.js",
     "prettier-all": "prettier --write '{src,examples,test}/**/*.js'",
     "lint": "yarn typescript && eslint src test webpack examples/*.js examples/**/src website/*.js website/src --fix",
@@ -147,6 +148,7 @@
     "s2-geometry": "^1.2.10",
     "supercluster": "^6.0.1",
     "type-analyzer": "0.2.5",
+    "typedoc": "^0.17.7",
     "uber-licence": "^3.1.1",
     "viewport-mercator-project": "^6.0.0",
     "wellknown": "^0.5.0"
@@ -225,8 +227,8 @@
     "tap-spec": "^4.1.1",
     "tape": "4.8.0",
     "tape-catch": "^1.0.6",
+    "typedoc-plugin-markdown": "^2.2.17",
     "typescript": "^3.7.5",
-
     "url-loader": "^0.5.7",
     "watchify": "^3.6.1",
     "webpack": "^4.29.0",

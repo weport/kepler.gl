@@ -20,14 +20,18 @@
 
 // vis-state-reducer
 import ActionTypes from 'constants/action-types';
+import {KeplerProtoDataset} from '../reducers/types';
+import {ParsedConfig} from '../schemas';
 
-export function layerConfigChange(oldLayer: object, newConfig: object): {
+export type LayerConfigChangeAction = {
   type: ActionTypes.LAYER_CONFIG_CHANGE;
   oldLayer: object;
   newConfig: object;
 };
 
-export function layerTextLabelChange(oldLayer: object, idx: number, prop: string, value: any): {
+export function layerConfigChange(oldLayer: object, newConfig: object): LayerConfigChangeAction;
+
+export type LayerTextLabelChangeAction = {
   type: ActionTypes.LAYER_TEXT_LABEL_CHANGE;
   oldLayer: object;
   idx: number;
@@ -35,204 +39,318 @@ export function layerTextLabelChange(oldLayer: object, idx: number, prop: string
   value: any;
 };
 
-export function layerTypeChange(oldLayer: object, newType: string): {
+export function layerTextLabelChange(
+  oldLayer: object,
+  idx: number,
+  prop: string,
+  value: any
+): LayerTextLabelChangeAction;
+
+export type LayerTypeChangeAction = {
   type: ActionTypes.LAYER_TYPE_CHANGE;
   oldLayer: object;
   newType: string;
 };
+export function layerTypeChange(oldLayer: object, newType: string): LayerTypeChangeAction;
 
-export function layerVisualChannelConfigChange(oldLayer: object, newConfig: object, channel: string): {
+export type LayerVisualChannelConfigChangeAction = {
   type: ActionTypes.LAYER_VISUAL_CHANNEL_CHANGE;
   oldLayer: object;
   newConfig: object;
   channel: string;
 };
+export function layerVisualChannelConfigChange(
+  oldLayer: object,
+  newConfig: object,
+  channel: string
+): LayerVisualChannelConfigChangeAction;
 
-export function layerVisConfigChange(oldLayer, newVisConfig): {
+export type LayerVisConfigChangeAction = {
   type: ActionTypes.LAYER_VIS_CONFIG_CHANGE;
   oldLayer: object;
   newVisConfig: object;
 };
+export function layerVisConfigChange(oldLayer, newVisConfig): LayerVisConfigChangeAction;
 
-export function layerColorUIChange(oldLayer: object, prop: string, newConfig: object): {
+export type LayerColorUIChangeAction = {
   type: ActionTypes.LAYER_COLOR_UI_CHANGE;
   oldLayer: object;
   prop: string;
   newConfig: object;
 };
+export function layerColorUIChange(
+  oldLayer: object,
+  prop: string,
+  newConfig: object
+): LayerColorUIChangeAction;
 
-export function updateLayerBlending(mode: 'additive' | 'normal' | 'subtractive'): {
+export type UpdateLayerBlendingAction = {
   type: ActionTypes.UPDATE_LAYER_BLENDING;
   mode: string;
 };
+export function updateLayerBlending(
+  mode: 'additive' | 'normal' | 'subtractive'
+): UpdateLayerBlendingAction;
 
-export function interactionConfigChange(config: object): {
+export type InteractionConfigChangeAction = {
   type: ActionTypes.INTERACTION_CONFIG_CHANGE;
   config: object;
 };
+export function interactionConfigChange(config: object): InteractionConfigChangeAction;
 
-export function setFilter(idx: number, prop: string, value: any, valueIndex: number): {
+export type SetFilterAction = {
   type: ActionTypes.SET_FILTER;
   idx: number;
   prop: string;
   value: any;
   valueIndex: number;
 };
+export function setFilter(
+  idx: number,
+  prop: string,
+  value: any,
+  valueIndex: number
+): SetFilterAction;
 
-export function addFilter(dataId: string): {
+export type AddFilterAction = {
   type: ActionTypes.ADD_FILTER;
   dataId: string;
 };
+export function addFilter(dataId: string): AddFilterAction;
 
-export function addLayer(props: object): {
+export type AddLayerAction = {
   type: ActionTypes.ADD_LAYER;
   props: object;
 };
+export function addLayer(props: object): AddLayerAction;
 
-export function reorderLayer(order: number[]): {
+export type ReorderLayerAction = {
   type: ActionTypes.REORDER_LAYER;
   order: number[];
 };
+export function reorderLayer(order: number[]): ReorderLayerAction;
 
-export function removeFilter(idx: number): {
+export type RemoveFilterAction = {
   type: ActionTypes.REMOVE_FILTER;
   idx: number;
 };
+export function removeFilter(idx: number): RemoveFilterAction;
 
-export function removeLayer(idx: number): {
-  type: ActionTypes.REMOVE_LAYER,
+export type RemoveLayerAction = {
+  type: ActionTypes.REMOVE_LAYER;
   idx: number;
 };
+export function removeLayer(idx: number): RemoveLayerAction;
 
-export function removeDataset(key: string): {
+export type RemoveDatasetAction = {
   type: ActionTypes.REMOVE_DATASET;
-  key: string;
+  dataId: string;
 };
+export function removeDataset(dataId: string): RemoveDatasetAction;
 
-export function showDatasetTable(dataId: string): {
+export type ShowDatasetTableAction = {
   type: ActionTypes.SHOW_DATASET_TABLE;
   dataId: string;
 };
+export function showDatasetTable(dataId: string): ShowDatasetTableAction;
 
-export function updateVisData(datasets, options, config): {
-  type: ActionTypes.UPDATE_VIS_DATA,
-  datasets,
-  options,
-  config
+export type SortTableColumnAction = {
+  type: ActionTypes.SORT_TABLE_COLUMN;
+  dataId: string;
+  column: string;
+  mode: string;
+};
+export function sortTableColumn(
+  dataId: string,
+  column: string,
+  mode: string
+): SortTableColumnAction;
+
+export type PinTableColumnAction = {
+  type: ActionTypes.PIN_TABLE_COLUMN;
+  dataId: string;
+  column: string;
+};
+export function pinTableColumn(dataId: string, column: string): PinTableColumnAction;
+
+export type CopyTableColumnAction = {
+  type: ActionTypes.COPY_TABLE_COLUMN;
+  dataId: string;
+  column: string;
+};
+export function copyTableColumn(dataId: string, column: string): CopyTableColumnAction;
+
+export type AddDaataToMapOptions = {
+  centerMap?: boolean;
+  readOnly?: boolean;
+  keepExistingConfig?: boolean;
 };
 
-export function toggleFilterAnimation(idx: number): {
+export type UpdateVisDataAction = {
+  type: ActionTypes.UPDATE_VIS_DATA;
+  datasets: KeplerProtoDataset[];
+  options: AddDaataToMapOptions;
+  config: ParsedConfig;
+};
+export function updateVisData(
+  datasets: KeplerProtoDataset[],
+  options: AddDaataToMapOptions,
+  config: ParsedConfig
+): UpdateVisDataAction;
+
+export type ToggleFilterAnimationAction = {
   type: ActionTypes.TOGGLE_FILTER_ANIMATION;
-  idx
+  idx;
 };
+export function toggleFilterAnimation(idx: number): ToggleFilterAnimationAction;
 
-export function updateFilterAnimationSpeed(idx: number, speed: number): {
+export type UpdateFilterAnimationSpeedAction = {
   type: ActionTypes.UPDATE_FILTER_ANIMATION_SPEED;
   idx: number;
   speed: number;
 };
+export function updateFilterAnimationSpeed(
+  idx: number,
+  speed: number
+): UpdateFilterAnimationSpeedAction;
 
-export function updateAnimationTime(value: number): {
+export type UpdateAnimationTimeAction = {
   type: ActionTypes.UPDATE_ANIMATION_TIME;
   value: number;
 };
+export function updateAnimationTime(value: number): UpdateAnimationTimeAction;
 
-export function updateLayerAnimationSpeed(speed: number): {
+export type UpdateLayerAnimationSpeedAction = {
   type: ActionTypes.UPDATE_LAYER_ANIMATION_SPEED;
   speed: number;
 };
+export function updateLayerAnimationSpeed(speed: number): UpdateLayerAnimationSpeedAction;
 
-export function enlargeFilter(idx: number): {
+export type EnlargeFilterAction = {
   type: ActionTypes.ENLARGE_FILTER;
   idx: number;
 };
+export function enlargeFilter(idx: number): EnlargeFilterAction;
 
-export function toggleFilterFeature(idx: number): {
+export type ToggleFilterFeatureAction = {
   type: ActionTypes.TOGGLE_FILTER_FEATURE;
   idx: number;
 };
+export function toggleFilterFeature(idx: number): ToggleFilterFeatureAction;
 
-export function onLayerHover(info: object): {
+export type OnLayerHoverAction = {
   type: ActionTypes.LAYER_HOVER;
   info: object;
 };
+export function onLayerHover(info: object): OnLayerHoverAction;
 
-export function onLayerClick(info: object): {
+export type OnLayerClickAction = {
   type: ActionTypes.LAYER_CLICK;
   info: object;
 };
+export function onLayerClick(info: object): OnLayerClickAction;
 
-export function onMapClick(): {
+export type OnMapClickAction = {
   type: ActionTypes.MAP_CLICK;
 };
 
-export function onMouseMove(evt): {
-  type: ActionTypes.MOUSE_MOVE,
-  evt
+export function onMapClick(): type;
+export type OnMouseMoveAction = {
+  type: ActionTypes.MOUSE_MOVE;
+  evt;
 };
+export function onMouseMove(evt): OnMouseMoveAction;
 
-export function toggleLayerForMap(mapIndex: number, layerId: string): {
+export type ToggleLayerForMapAction = {
   type: ActionTypes.TOGGLE_LAYER_FOR_MAP;
   mapIndex: number;
   layerId: string;
 };
+export function toggleLayerForMap(mapIndex: number, layerId: string): ToggleLayerForMapAction;
 
-export function setFilterPlot(idx: number, newProp: object): {
+export type SetFilterPlotAction = {
   type: ActionTypes.SET_FILTER_PLOT;
   idx: number;
   newProp: object;
 };
+export function setFilterPlot(idx: number, newProp: object): SetFilterPlotAction;
 
-export function setMapInfo(info): {
-  type: ActionTypes.SET_MAP_INFO,
-  info
+export type SetMapInfoAction = {
+  type: ActionTypes.SET_MAP_INFO;
+  info;
 };
+export function setMapInfo(info): SetMapInfoAction;
 
-export function loadFiles(files: object[]): {
+export type LoadFilesAction = {
   type: ActionTypes.LOAD_FILES;
   files: object[];
 };
+export function loadFiles(files: object[]): LoadFilesAction;
 
-export function loadFilesErr(error: Error) {
+export type LoadFilesErrAction = {
   type: ActionTypes.LOAD_FILES_ERR;
   error: Error;
 };
+export function loadFilesErr(error: Error): LoadFilesErrAction;
 
-export function setFeatures(features: object[]): {
+export type SetFeaturesAction = {
   type: ActionTypes.SET_FEATURES;
   features: object[];
 };
+export function setFeatures(features: object[]): SetFeaturesAction;
 
-export function setPolygonFilterLayer(layer: object, feature: object): {
-  type: ActionTypes.SET_POLYGON_FILTER_LAYER,
+export type SetPolygonFilterLayerAction = {
+  type: ActionTypes.SET_POLYGON_FILTER_LAYER;
   layer: object;
   feature: object;
 };
+export function setPolygonFilterLayer(layer: object, feature: object): SetPolygonFilterLayerAction;
 
-export function setSelectedFeature(feature: object): {
+export type SetSelectedFeatureAction = {
   type: ActionTypes.SET_SELECTED_FEATURE;
   feature: object;
 };
+export function setSelectedFeature(feature: object): SetSelectedFeatureAction;
 
-export function deleteFeature(feature: object): {
+export type DeleteFeatureAction = {
   type: ActionTypes.DELETE_FEATURE;
   feature: object;
 };
+export function deleteFeature(feature: object): DeleteFeatureAction;
 
-export function setEditorMode(mode: string): {
+export type SetEditorModeAction = {
   type: ActionTypes.SET_EDITOR_MODE;
   mode: string;
 };
+export function setEditorMode(mode: string): SetEditorModeAction;
 
-export function applyCPUFilter(dataId: string | string[]): {
+export type ApplyCPUFilterAction = {
   type: ActionTypes.APPLY_CPU_FILTER;
   dataId: string;
 };
+export function applyCPUFilter(dataId: string | string[]): ApplyCPUFilterAction;
 
-export function toggleEditorVisibility(): {
-  type: ActionTypes.TOGGLE_EDITOR_VISIBILITY
+export type ToggleEditorVisibilityAction = {
+  type: ActionTypes.TOGGLE_EDITOR_VISIBILITY;
 };
 
-/* eslint-disable no-unused-vars */
-const visStateActions = null;
-/* eslint-enable no-unused-vars */
+export function toggleEditorVisibility(): ToggleEditorVisibilityAction;
+export type LoadFileSuccessAction = {
+  type: ActionTypes.LOAD_FILES_SUCCESS;
+  result: any;
+};
+export function loadFileSuccess(): LoadFileSuccessAction;
+
+export type LoadNextFileAction = {
+  type: ActionTypes.LOAD_NEXT_FILE;
+  fileCache: any;
+  filesToLoad: any;
+  totalCount: any;
+  onFinish: any;
+};
+export function loadNextFile(payload: {
+  fileCache: any;
+  filesToLoad: any;
+  totalCount: any;
+  onFinish: any;
+}): LoadNextFileAction;
