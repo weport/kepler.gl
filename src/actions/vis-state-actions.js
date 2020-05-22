@@ -164,7 +164,7 @@ export function interactionConfigChange(config) {
  * @param idx -`idx` of filter to be updated
  * @param prop - `prop` of filter, e,g, `dataId`, `name`, `value`
  * @param value - new value
- * @param valueIndex - array properties like dataset require index in order to improve performance
+ * @param valueIndex - dataId index
  * @returns action
  * @type {typeof import('./vis-state-actions').setFilter}
  * @public
@@ -340,25 +340,26 @@ export function copyTableColumn(dataId, column) {
   };
 }
 
+// * @param dataset.info -info of a dataset
+// * @param dataset.info.id - id of this dataset. If config is defined, `id` should matches the `dataId` in config.
+// * @param dataset.info.label - A display name of this dataset
+// * @param dataset.data - ***required** The data object, in a tabular format with 2 properties `fields` and `rows`
+// * @param dataset.data.fields - ***required** Array of fields,
+// * @param dataset.data.fields.name - ***required** Name of the field,
+// * @param dataset.data.rows - ***required** Array of rows, in a tabular format with `fields` and `rows`
 /**
  * Add new dataset to `visState`, with option to load a map config along with the datasets
  * @memberof visStateActions
  * @param datasets - ***required** datasets can be a dataset or an array of datasets
  * Each dataset object needs to have `info` and `data` property.
- * @param datasets.info -info of a dataset
- * @param datasets.info.id - id of this dataset. If config is defined, `id` should matches the `dataId` in config.
- * @param datasets.info.label - A display name of this dataset
- * @param datasets.data - ***required** The data object, in a tabular format with 2 properties `fields` and `rows`
- * @param datasets.data.fields - ***required** Array of fields,
- * @param datasets.data.fields.name - ***required** Name of the field,
- * @param datasets.data.rows - ***required** Array of rows, in a tabular format with `fields` and `rows`
- * @param {Object} options
- * @param {boolean} options.centerMap `default: true` if `centerMap` is set to `true` kepler.gl will
+ * @param {object} options
+ * @param options.centerMap `default: true` if `centerMap` is set to `true` kepler.gl will
  * place the map view within the data points boundaries
- * @param {boolean} options.readOnly `default: false` if `readOnly` is set to `true`
+ * @param options.readOnly `default: false` if `readOnly` is set to `true`
  * the left setting panel will be hidden
- * @param {Object} config this object will contain the full kepler.gl instance configuration {mapState, mapStyle, visState}
+ * @param config this object will contain the full kepler.gl instance configuration {mapState, mapStyle, visState}
  * @returns action
+ * @type {typeof import('./vis-state-actions').updateVisData}
  * @public
  */
 export function updateVisData(datasets, options, config) {
@@ -373,7 +374,8 @@ export function updateVisData(datasets, options, config) {
 /**
  * Start and end filter animation
  * @memberof visStateActions
- * @param {Number} idx - idx of filter
+ * @param {Number} idx of filter
+ * @type {typeof import('./vis-state-actions').toggleFilterAnimation}
  * @returns action
  * @public
  */
@@ -387,8 +389,9 @@ export function toggleFilterAnimation(idx) {
 /**
  * Change filter animation speed
  * @memberof visStateActions
- * @param {Number} idx -  `idx` of filter
- * @param {Number} speed - `speed` to change it to. `speed` is a multiplier
+ * @param idx -  `idx` of filter
+ * @param speed - `speed` to change it to. `speed` is a multiplier
+ * @type {typeof import('./vis-state-actions').updateFilterAnimationSpeed}
  * @returns action
  * @public
  */
@@ -403,7 +406,8 @@ export function updateFilterAnimationSpeed(idx, speed) {
 /**
  * Reset animation
  * @memberof visStateActions
- * @param {Number} value -  Current value of the slider
+ * @param value -  Current value of the slider
+ * @type {typeof import('./vis-state-actions').updateAnimationTime}
  * @returns action
  * @public
  */
@@ -417,7 +421,8 @@ export function updateAnimationTime(value) {
 /**
  * update trip layer animation speed
  * @memberof visStateActions
- * @param {Number} speed - `speed` to change it to. `speed` is a multiplier
+ * @param speed - `speed` to change it to. `speed` is a multiplier
+ * @type {typeof import('./vis-state-actions').updateLayerAnimationSpeed}
  * @returns action
  * @public
  */
@@ -431,7 +436,8 @@ export function updateLayerAnimationSpeed(speed) {
 /**
  * Show larger time filter at bottom for time playback (apply to time filter only)
  * @memberof visStateActions
- * @param {Number} idx - index of filter to enlarge
+ * @param idx - index of filter to enlarge
+ * @type {typeof import('./vis-state-actions').enlargeFilter}
  * @returns action
  * @public
  */
@@ -445,8 +451,9 @@ export function enlargeFilter(idx) {
 /**
  * Show/hide filter feature on map
  * @memberof visStateActions
- * @param {Number} idx - index of filter feature to show/hide
- * @return {{type: ActionTypes.TOGGLE_FILTER_FEATURE, idx: idx}}
+ * @param idx - index of filter feature to show/hide
+ * @type {typeof import('./vis-state-actions').toggleFilterFeature}
+ * @return action
  */
 export function toggleFilterFeature(idx) {
   return {
@@ -458,7 +465,8 @@ export function toggleFilterFeature(idx) {
 /**
  * Trigger layer hover event with hovered object
  * @memberof visStateActions
- * @param {Object} info - Object hovered, returned by deck.gl
+ * @param info - Object hovered, returned by deck.gl
+ * @type {typeof import('./vis-state-actions').onLayerHover}
  * @returns action
  * @public
  */
@@ -472,7 +480,8 @@ export function onLayerHover(info) {
 /**
  * Trigger layer click event with clicked object
  * @memberof visStateActions
- * @param {Object} info - Object clicked, returned by deck.gl
+ * @param info - Object clicked, returned by deck.gl
+ * @type {typeof import('./vis-state-actions').onLayerClick}
  * @returns action
  * @public
  */
@@ -486,6 +495,7 @@ export function onLayerClick(info) {
 /**
  * Trigger map click event, unselect clicked object
  * @memberof visStateActions
+ * @type {typeof import('./vis-state-actions').onMapClick}
  * @returns action
  * @public
  */
@@ -501,7 +511,8 @@ export function onMapClick() {
  * https://uber.github.io/react-map-gl/#/documentation/api-reference/pointer-event
  *
  * @memberof visStateActions
- * @param {Object} evt - PointerEvent
+ * @param evt - PointerEvent
+ * @type {typeof import('./vis-state-actions').onMouseMove}
  * @returns action
  * @public
  */
@@ -515,8 +526,9 @@ export function onMouseMove(evt) {
 /**
  * Toggle visibility of a layer in a split map
  * @memberof visStateActions
- * @param {Number} mapIndex - index of the split map
- * @param {string} layerId - id of the layer
+ * @param mapIndex - index of the split map
+ * @param layerId - id of the layer
+ * @type {typeof import('./vis-state-actions').toggleLayerForMap}
  * @returns action
  * @public
  */
@@ -531,24 +543,27 @@ export function toggleLayerForMap(mapIndex, layerId) {
 /**
  * Set the property of a filter plot
  * @memberof visStateActions
- * @param {Number} idx
- * @param {Object} newProp key value mapping of new prop `{yAxis: 'histogram'}`
+ * @param idx
+ * @param newProp key value mapping of new prop `{yAxis: 'histogram'}`
+ * @param valueIndex dataId index
+ * @type {typeof import('./vis-state-actions').setFilterPlot}
  * @returns action
  * @public
  */
-export function setFilterPlot(idx, newProp) {
+export function setFilterPlot(idx, newProp, valueIndex) {
   return {
     type: ActionTypes.SET_FILTER_PLOT,
     idx,
-    newProp
+    newProp,
+    valueIndex
   };
 }
 
 /**
  * Set the property of a filter plot
  * @memberof visStateActions
- * @param {Number} idx
- * @param {Object} newProp key value mapping of new prop `{yAxis: 'histogram'}`
+ * @param info
+ * @type {typeof import('./vis-state-actions').setMapInfo}
  * @returns action
  * @public
  */
@@ -562,7 +577,8 @@ export function setMapInfo(info) {
 /**
  * Trigger file loading dispatch `addDataToMap` if succeed, or `loadFilesErr` if failed
  * @memberof visStateActions
- * @param {Array<Object>} files array of fileblob
+ * @param files array of fileblob
+ * @type {typeof import('./vis-state-actions').loadFiles}
  * @returns action
  * @public
  */
@@ -574,12 +590,12 @@ export function loadFiles(files) {
 }
 
 /**
- * called with next file to load
- * @param {object} payload
- * @param {Array<object>} payload.fileCache
- * @param {Array<object>} payload.filesToLoad
- * @param {number} payload.totalCount
- * @param {Function} payload.onFinish - action creator to execute when all files are loaded
+ * Called with next file to load
+ * @memberof visStateActions
+ * @param payload
+ * @type {typeof import('./vis-state-actions').loadNextFile}
+ * @returns action
+ * @public
  */
 export function loadNextFile({fileCache, filesToLoad, totalCount, onFinish}) {
   return {
@@ -593,7 +609,10 @@ export function loadNextFile({fileCache, filesToLoad, totalCount, onFinish}) {
 
 /**
  * called when all files are processed and loaded
- * @param {Array<object>} result
+ * @memberof visStateActions
+ * @param result
+ * @type {typeof import('./vis-state-actions').loadFileSuccess}
+ * @returns action
  */
 export function loadFileSuccess(result) {
   return {
@@ -605,7 +624,8 @@ export function loadFileSuccess(result) {
 /**
  * Trigger loading file error
  * @memberof visStateActions
- * @param {*} error
+ * @param  error
+ * @type {typeof import('./vis-state-actions').loadFilesErr}
  * @returns action
  * @public
  */
@@ -619,7 +639,8 @@ export function loadFilesErr(error) {
 /**
  * Store features to state
  * @memberof visStateActions
- * @param {Array<Object>} features
+ * @param features
+ * @type {typeof import('./vis-state-actions').setFeatures}
  * @returns action
  */
 export function setFeatures(features) {
@@ -633,9 +654,10 @@ export function setFeatures(features) {
  * It will apply the provide feature as filter to the given layer.
  * If the given feature is already applied as filter to the layer, it will remove the layer from the filter
  * @memberof visStateActions
- * @param {Object} layer
- * @param {Object} feature
- * @return {{feature: *, type: ActionTypes.SET_POLYGON_FILTER_LAYER, layer: *}}
+ * @param layer
+ * @param feature
+ * @type {typeof import('./vis-state-actions').setPolygonFilterLayer}
+ * @returns action
  */
 export function setPolygonFilterLayer(layer, feature) {
   return {
@@ -648,8 +670,9 @@ export function setPolygonFilterLayer(layer, feature) {
 /**
  * Set the current feature to be edited/deleted
  * @memberof visStateActions
- * @param {Object} feature
- * @return {{feature: feature, type: ActionTypes.SET_SELECTED_FEATURE}}
+ * @param feature
+ * @type {typeof import('./vis-state-actions').setSelectedFeature}
+ * @returns action
  */
 export function setSelectedFeature(feature) {
   return {
@@ -661,8 +684,9 @@ export function setSelectedFeature(feature) {
 /**
  * Delete the given feature
  * @memberof visStateActions
- * @param {Object} feature
- * @return {{type: ActionTypes.DELETE_FEATURE, feature: feature}}
+ * @param feature
+ * @type {typeof import('./vis-state-actions').deleteFeature}
+ * @returns action
  */
 export function deleteFeature(feature) {
   return {
@@ -673,8 +697,9 @@ export function deleteFeature(feature) {
 
 /** Set the map mode
  * @memberof visStateActions
- * @param {string} mode one of EDITOR_MODES
- * @return {{type: ActionTypes. SET_EDITOR_MODE, mode: *}}
+ * @param mode one of EDITOR_MODES
+ * @type {typeof import('./vis-state-actions').setEditorMode}
+ * @returns action
  * @public
  * @example
  * import {setMapMode} from 'kepler.gl/actions';
@@ -692,7 +717,8 @@ export function setEditorMode(mode) {
 /**
  * Trigger CPU filter of selected dataset
  * @memberof visStateActions
- * @param {string | Arrary<string>} dataId - single dataId or an array of dataIds
+ * @param dataId - single dataId or an array of dataIds
+ * @type {typeof import('./vis-state-actions').applyCPUFilter}
  * @returns action
  * @public
  */
@@ -707,7 +733,8 @@ export function applyCPUFilter(dataId) {
 
  * Toggle editor layer visibility
  * @memberof visStateActions
- * @return {{type: ActionTypes.TOGGLE_EDITOR_VISIBILITY}}
+ * @type {typeof import('./vis-state-actions').toggleEditorVisibility}
+ * @return action
  */
 export function toggleEditorVisibility() {
   return {
@@ -726,5 +753,6 @@ export function toggleEditorVisibility() {
  * @public
  */
 /* eslint-disable no-unused-vars */
+// @ts-ignore
 const visStateActions = null;
 /* eslint-enable no-unused-vars */

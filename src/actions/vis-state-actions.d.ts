@@ -20,142 +20,160 @@
 
 // vis-state-reducer
 import ActionTypes from 'constants/action-types';
-import {KeplerProtoDataset} from '../reducers/types';
+import {ProtoDataset, AddDataToMaoPayload} from '../reducers/types';
 import {ParsedConfig} from '../schemas';
+import {FileCacheItem} from '../processors/file-handler';
+import {Layer, LayerConfig, LayerVisConfig} from 'layers';
+import {Feature} from 'reducers/vis-state-updaters';
 
-export type LayerConfigChangeAction = {
-  type: ActionTypes.LAYER_CONFIG_CHANGE;
-  oldLayer: object;
-  newConfig: object;
+type Merge<A, B> = {[K in keyof A]: K extends keyof B ? B[K] : A[K]} & B extends infer O
+  ? {[K in keyof O]: O[K]}
+  : never;
+
+export type LayerConfigChangeUpdaterAction = {
+  oldLayer: Layer;
+  newConfig: Partiel<LayerConfig>;
 };
 
-export function layerConfigChange(oldLayer: object, newConfig: object): LayerConfigChangeAction;
+export function layerConfigChange(
+  oldLayer: Layer,
+  newConfig: Partiel<LayerConfig>
+): Merge<LayerConfigChangeUpdaterAction, {type: ActionTypes.LAYER_CONFIG_CHANGE}>;
 
-export type LayerTextLabelChangeAction = {
-  type: ActionTypes.LAYER_TEXT_LABEL_CHANGE;
-  oldLayer: object;
-  idx: number;
+export type LayerTextLabelChangeUpdaterAction = {
+  oldLayer: Layer;
+  idx: number | 'all';
   prop: string;
   value: any;
 };
 
 export function layerTextLabelChange(
-  oldLayer: object,
-  idx: number,
+  oldLayer: Layer,
+  idx: number | 'all',
   prop: string,
   value: any
-): LayerTextLabelChangeAction;
+): Merge<LayerTextLabelChangeUpdaterAction, {type: ActionTypes.LAYER_TEXT_LABEL_CHANGE}>;
 
-export type LayerTypeChangeAction = {
-  type: ActionTypes.LAYER_TYPE_CHANGE;
-  oldLayer: object;
+export type LayerTypeChangeUpdaterAction = {
+  oldLayer: Layer;
   newType: string;
 };
-export function layerTypeChange(oldLayer: object, newType: string): LayerTypeChangeAction;
+export function layerTypeChange(
+  oldLayer: Layer,
+  newType: string
+): Merge<LayerTypeChangeUpdaterAction, {type: ActionTypes.LAYER_TYPE_CHANGE}>;
 
-export type LayerVisualChannelConfigChangeAction = {
-  type: ActionTypes.LAYER_VISUAL_CHANNEL_CHANGE;
-  oldLayer: object;
-  newConfig: object;
+export type LayerVisualChannelConfigChangeUpdaterAction = {
+  oldLayer: Layer;
+  newConfig: Partial<LayerConfig>;
   channel: string;
 };
 export function layerVisualChannelConfigChange(
-  oldLayer: object,
-  newConfig: object,
+  oldLayer: Layer,
+  newConfig: Partial<LayerConfig>,
   channel: string
-): LayerVisualChannelConfigChangeAction;
+): Merge<
+  LayerVisualChannelConfigChangeUpdaterAction,
+  {type: ActionTypes.LAYER_VISUAL_CHANNEL_CHANGE}
+>;
 
-export type LayerVisConfigChangeAction = {
-  type: ActionTypes.LAYER_VIS_CONFIG_CHANGE;
-  oldLayer: object;
-  newVisConfig: object;
+export type LayerVisConfigChangeUpdaterAction = {
+  oldLayer: Layer;
+  newVisConfig: Partial<LayerVisConfig>;
 };
-export function layerVisConfigChange(oldLayer, newVisConfig): LayerVisConfigChangeAction;
+export function layerVisConfigChange(
+  oldLayer: Layer,
+  newVisConfig: Partial<LayerVisConfig>
+): Merge<LayerVisConfigChangeUpdaterAction, {type: ActionTypes.LAYER_VIS_CONFIG_CHANGE}>;
 
-export type LayerColorUIChangeAction = {
-  type: ActionTypes.LAYER_COLOR_UI_CHANGE;
-  oldLayer: object;
+export type LayerColorUIChangeUpdaterAction = {
+  oldLayer: Layer;
   prop: string;
   newConfig: object;
 };
 export function layerColorUIChange(
-  oldLayer: object,
+  oldLayer: Layer,
   prop: string,
   newConfig: object
-): LayerColorUIChangeAction;
+): Merge<LayerColorUIChangeUpdaterAction, {type: ActionTypes.LAYER_COLOR_UI_CHANGE}>;
 
-export type UpdateLayerBlendingAction = {
-  type: ActionTypes.UPDATE_LAYER_BLENDING;
+export type UpdateLayerBlendingUpdaterAction = {
   mode: string;
 };
 export function updateLayerBlending(
   mode: 'additive' | 'normal' | 'subtractive'
-): UpdateLayerBlendingAction;
+): Merge<UpdateLayerBlendingUpdaterAction, {type: ActionTypes.UPDATE_LAYER_BLENDING}>;
 
-export type InteractionConfigChangeAction = {
-  type: ActionTypes.INTERACTION_CONFIG_CHANGE;
+export type InteractionConfigChangeUpdaterAction = {
   config: object;
 };
-export function interactionConfigChange(config: object): InteractionConfigChangeAction;
+export function interactionConfigChange(
+  config: object
+): Merge<InteractionConfigChangeUpdaterAction, {type: ActionTypes.INTERACTION_CONFIG_CHANGE}>;
 
-export type SetFilterAction = {
-  type: ActionTypes.SET_FILTER;
+export type SetFilterUpdaterAction = {
   idx: number;
   prop: string;
   value: any;
-  valueIndex: number;
+  valueIndex?: number;
 };
 export function setFilter(
   idx: number,
   prop: string,
   value: any,
   valueIndex: number
-): SetFilterAction;
+): Merge<SetFilterUpdaterAction, {type: ActionTypes.SET_FILTER}>;
 
-export type AddFilterAction = {
-  type: ActionTypes.ADD_FILTER;
+export type AddFilterUpdaterAction = {
   dataId: string;
 };
-export function addFilter(dataId: string): AddFilterAction;
+export function addFilter(
+  dataId: string
+): Merge<AddFilterUpdaterAction, {type: ActionTypes.ADD_FILTER}>;
 
-export type AddLayerAction = {
-  type: ActionTypes.ADD_LAYER;
+export type AddLayerUpdaterAction = {
   props: object;
 };
-export function addLayer(props: object): AddLayerAction;
+export function addLayer(
+  props: object
+): Merge<AddLayerUpdaterAction, {type: ActionTypes.ADD_LAYER}>;
 
-export type ReorderLayerAction = {
-  type: ActionTypes.REORDER_LAYER;
+export type ReorderLayerUpdaterAction = {
   order: number[];
 };
-export function reorderLayer(order: number[]): ReorderLayerAction;
+export function reorderLayer(
+  order: number[]
+): Merge<ReorderLayerUpdaterAction, {type: ActionTypes.REORDER_LAYER}>;
 
-export type RemoveFilterAction = {
-  type: ActionTypes.REMOVE_FILTER;
+export type RemoveFilterUpdaterAction = {
   idx: number;
 };
-export function removeFilter(idx: number): RemoveFilterAction;
+export function removeFilter(
+  idx: number
+): Merge<RemoveFilterUpdaterAction, {type: ActionTypes.REMOVE_FILTER}>;
 
-export type RemoveLayerAction = {
-  type: ActionTypes.REMOVE_LAYER;
+export type RemoveLayerUpdaterAction = {
   idx: number;
 };
-export function removeLayer(idx: number): RemoveLayerAction;
+export function removeLayer(
+  idx: number
+): Merge<RemoveLayerUpdaterAction, {type: ActionTypes.REMOVE_LAYER}>;
 
-export type RemoveDatasetAction = {
-  type: ActionTypes.REMOVE_DATASET;
+export type RemoveDatasetUpdaterAction = {
   dataId: string;
 };
-export function removeDataset(dataId: string): RemoveDatasetAction;
+export function removeDataset(
+  dataId: string
+): Merge<RemoveDatasetUpdaterAction, {type: ActionTypes.REMOVE_DATASET}>;
 
-export type ShowDatasetTableAction = {
-  type: ActionTypes.SHOW_DATASET_TABLE;
+export type ShowDatasetTableUpdaterAction = {
   dataId: string;
 };
-export function showDatasetTable(dataId: string): ShowDatasetTableAction;
+export function showDatasetTable(
+  dataId: string
+): Merge<ShowDatasetTableUpdaterAction, {type: ActionTypes.SHOW_DATASET_TABLE}>;
 
-export type SortTableColumnAction = {
-  type: ActionTypes.SORT_TABLE_COLUMN;
+export type SortTableColumnUpdaterAction = {
   dataId: string;
   column: string;
   mode: string;
@@ -164,193 +182,219 @@ export function sortTableColumn(
   dataId: string,
   column: string,
   mode: string
-): SortTableColumnAction;
+): Merge<SortTableColumnUpdaterAction, {type: ActionTypes.SORT_TABLE_COLUMN}>;
 
-export type PinTableColumnAction = {
-  type: ActionTypes.PIN_TABLE_COLUMN;
+export type PinTableColumnUpdaterAction = {
   dataId: string;
   column: string;
 };
-export function pinTableColumn(dataId: string, column: string): PinTableColumnAction;
+export function pinTableColumn(
+  dataId: string,
+  column: string
+): Merge<PinTableColumnUpdaterAction, {type: ActionTypes.PIN_TABLE_COLUMN}>;
 
-export type CopyTableColumnAction = {
-  type: ActionTypes.COPY_TABLE_COLUMN;
+export type CopyTableColumnUpdaterAction = {
   dataId: string;
   column: string;
 };
-export function copyTableColumn(dataId: string, column: string): CopyTableColumnAction;
+export function copyTableColumn(
+  dataId: string,
+  column: string
+): Merge<CopyTableColumnUpdaterAction, {type: ActionTypes.COPY_TABLE_COLUMN}>;
 
-export type AddDaataToMapOptions = {
-  centerMap?: boolean;
+export type AddDaataToMapOUpdaterptions = {
+  centrMap?: boolean;
   readOnly?: boolean;
   keepExistingConfig?: boolean;
 };
 
-export type UpdateVisDataAction = {
-  type: ActionTypes.UPDATE_VIS_DATA;
-  datasets: KeplerProtoDataset[];
-  options: AddDaataToMapOptions;
-  config: ParsedConfig;
-};
+export type UpdateVisDataUpdaterAction = {
+  datasets: AddDataToMaoPayload['datasets'];
+  options: AddDataToMaoPayload['options'];
+  config: AddDataToMaoPayload['config'];
+} & AddDataToMaoPayload;
 export function updateVisData(
-  datasets: KeplerProtoDataset[],
-  options: AddDaataToMapOptions,
-  config: ParsedConfig
-): UpdateVisDataAction;
+  datasets: AddDataToMaoPayload['datasets'],
+  options: AddDataToMaoPayload['options'],
+  config: AddDataToMaoPayload['config']
+): Merge<UpdateVisDataUpdaterAction, {type: ActionTypes.UPDATE_VIS_DATA}>;
 
-export type ToggleFilterAnimationAction = {
-  type: ActionTypes.TOGGLE_FILTER_ANIMATION;
+export type ToggleFilterAnimationUpdaterAction = {
   idx;
 };
-export function toggleFilterAnimation(idx: number): ToggleFilterAnimationAction;
+export function toggleFilterAnimation(
+  idx: number
+): Merge<ToggleFilterAnimationUpdaterAction, {type: ActionTypes.TOGGLE_FILTER_ANIMATION}>;
 
-export type UpdateFilterAnimationSpeedAction = {
-  type: ActionTypes.UPDATE_FILTER_ANIMATION_SPEED;
+export type UpdateFilterAnimationSpeedUpdaterAction = {
   idx: number;
   speed: number;
 };
 export function updateFilterAnimationSpeed(
   idx: number,
   speed: number
-): UpdateFilterAnimationSpeedAction;
+): Merge<
+  UpdateFilterAnimationSpeedUpdaterAction,
+  {type: ActionTypes.UPDATE_FILTER_ANIMATION_SPEED}
+>;
 
-export type UpdateAnimationTimeAction = {
-  type: ActionTypes.UPDATE_ANIMATION_TIME;
+export type UpdateAnimationTimeUpdaterAction = {
   value: number;
 };
-export function updateAnimationTime(value: number): UpdateAnimationTimeAction;
+export function updateAnimationTime(
+  value: number
+): Merge<UpdateAnimationTimeUpdaterAction, {type: ActionTypes.UPDATE_ANIMATION_TIME}>;
 
-export type UpdateLayerAnimationSpeedAction = {
-  type: ActionTypes.UPDATE_LAYER_ANIMATION_SPEED;
+export type UpdateLayerAnimationSpeedUpdaterAction = {
   speed: number;
 };
-export function updateLayerAnimationSpeed(speed: number): UpdateLayerAnimationSpeedAction;
+export function updateLayerAnimationSpeed(
+  speed: number
+): Merge<UpdateLayerAnimationSpeedUpdaterAction, {type: ActionTypes.UPDATE_LAYER_ANIMATION_SPEED}>;
 
-export type EnlargeFilterAction = {
-  type: ActionTypes.ENLARGE_FILTER;
+export type EnlargeFilterUpdaterAction = {
   idx: number;
 };
-export function enlargeFilter(idx: number): EnlargeFilterAction;
+export function enlargeFilter(
+  idx: number
+): Merge<EnlargeFilterUpdaterAction, {type: ActionTypes.ENLARGE_FILTER}>;
 
-export type ToggleFilterFeatureAction = {
-  type: ActionTypes.TOGGLE_FILTER_FEATURE;
+export type ToggleFilterFeatureUpdaterAction = {
   idx: number;
 };
-export function toggleFilterFeature(idx: number): ToggleFilterFeatureAction;
+export function toggleFilterFeature(
+  idx: number
+): Merge<ToggleFilterFeatureUpdaterAction, {type: ActionTypes.TOGGLE_FILTER_FEATURE}>;
 
-export type OnLayerHoverAction = {
-  type: ActionTypes.LAYER_HOVER;
+export type OnLayerHoverUpdaterAction = {
   info: object;
 };
-export function onLayerHover(info: object): OnLayerHoverAction;
+export function onLayerHover(
+  info: object
+): Merge<OnLayerHoverUpdaterAction, {type: ActionTypes.LAYER_HOVER}>;
 
-export type OnLayerClickAction = {
-  type: ActionTypes.LAYER_CLICK;
+export type OnLayerClickUpdaterAction = {
   info: object;
 };
-export function onLayerClick(info: object): OnLayerClickAction;
+export function onLayerClick(
+  info: object
+): Merge<OnLayerClickUpdaterAction, {type: ActionTypes.LAYER_CLICK}>;
 
-export type OnMapClickAction = {
-  type: ActionTypes.MAP_CLICK;
-};
+export type OnMapClickUpdaterAction = {};
 
-export function onMapClick(): type;
-export type OnMouseMoveAction = {
-  type: ActionTypes.MOUSE_MOVE;
+export function onMapClick(): Merge<OnMapClickUpdaterAction, {type: ActionTypes.MAP_CLICK}>;
+export type OnMouseMoveUpdaterAction = {
   evt;
 };
-export function onMouseMove(evt): OnMouseMoveAction;
+export function onMouseMove(evt): Merge<OnMouseMoveUpdaterAction, {type: ActionTypes.MOUSE_MOVE}>;
 
-export type ToggleLayerForMapAction = {
-  type: ActionTypes.TOGGLE_LAYER_FOR_MAP;
+export type ToggleLayerForMapUpdaterAction = {
   mapIndex: number;
   layerId: string;
 };
-export function toggleLayerForMap(mapIndex: number, layerId: string): ToggleLayerForMapAction;
+export function toggleLayerForMap(
+  mapIndex: number,
+  layerId: string
+): Merge<ToggleLayerForMapUpdaterAction, {type: ActionTypes.TOGGLE_LAYER_FOR_MAP}>;
 
-export type SetFilterPlotAction = {
-  type: ActionTypes.SET_FILTER_PLOT;
+export type SetFilterPlotUpdaterAction = {
   idx: number;
   newProp: object;
+  valueIndex?: number;
 };
-export function setFilterPlot(idx: number, newProp: object): SetFilterPlotAction;
+export function setFilterPlot(
+  idx: number,
+  newProp: object,
+  valueIndex?: number
+): Merge<SetFilterPlotUpdaterAction, {type: ActionTypes.SET_FILTER_PLOT}>;
 
-export type SetMapInfoAction = {
-  type: ActionTypes.SET_MAP_INFO;
-  info;
+export type SetMapInfoUpdaterAction = {
+  info: any;
 };
-export function setMapInfo(info): SetMapInfoAction;
+export function setMapInfo(
+  info: any
+): Merge<SetMapInfoUpdaterAction, {type: ActionTypes.SET_MAP_INFO}>;
 
-export type LoadFilesAction = {
-  type: ActionTypes.LOAD_FILES;
-  files: object[];
+export type LoadFilesUpdaterAction = {
+  files: FileList;
 };
-export function loadFiles(files: object[]): LoadFilesAction;
+export function loadFiles(
+  files: FileList
+): Merge<LoadFilesUpdaterAction, {type: ActionTypes.LOAD_FILES}>;
 
-export type LoadFilesErrAction = {
-  type: ActionTypes.LOAD_FILES_ERR;
-  error: Error;
+export type SetFeaturesUpdaterAction = {
+  features: Feature[];
 };
-export function loadFilesErr(error: Error): LoadFilesErrAction;
+export function setFeatures(
+  features: Feature[]
+): Merge<SetFeaturesUpdaterAction, {type: ActionTypes.SET_FEATURES}>;
 
-export type SetFeaturesAction = {
-  type: ActionTypes.SET_FEATURES;
-  features: object[];
+export type SetPolygonFilterLayerUpdaterAction = {
+  layer: Layer;
+  feature: Feature;
 };
-export function setFeatures(features: object[]): SetFeaturesAction;
+export function setPolygonFilterLayer(
+  layer: Layer,
+  feature: Feature
+): Merge<SetPolygonFilterLayerUpdaterAction, {type: ActionTypes.SET_POLYGON_FILTER_LAYER}>;
 
-export type SetPolygonFilterLayerAction = {
-  type: ActionTypes.SET_POLYGON_FILTER_LAYER;
-  layer: object;
-  feature: object;
+export type SetSelectedFeatureUpdaterAction = {
+  feature: Feature;
 };
-export function setPolygonFilterLayer(layer: object, feature: object): SetPolygonFilterLayerAction;
+export function setSelectedFeature(
+  feature: Feature
+): Merge<SetSelectedFeatureUpdaterAction, {type: ActionTypes.SET_SELECTED_FEATURE}>;
 
-export type SetSelectedFeatureAction = {
-  type: ActionTypes.SET_SELECTED_FEATURE;
-  feature: object;
+export type DeleteFeatureUpdaterAction = {
+  feature: Feature;
 };
-export function setSelectedFeature(feature: object): SetSelectedFeatureAction;
+export function deleteFeature(
+  feature: Feature
+): Merge<DeleteFeatureUpdaterAction, {type: ActionTypes.DELETE_FEATURE}>;
 
-export type DeleteFeatureAction = {
-  type: ActionTypes.DELETE_FEATURE;
-  feature: object;
-};
-export function deleteFeature(feature: object): DeleteFeatureAction;
-
-export type SetEditorModeAction = {
-  type: ActionTypes.SET_EDITOR_MODE;
+export type SetEditorModeUpdaterAction = {
   mode: string;
 };
-export function setEditorMode(mode: string): SetEditorModeAction;
+export function setEditorMode(
+  mode: string
+): Merge<SetEditorModeUpdaterAction, {type: ActionTypes.SET_EDITOR_MODE}>;
 
-export type ApplyCPUFilterAction = {
-  type: ActionTypes.APPLY_CPU_FILTER;
-  dataId: string;
+export type ApplyCPUFilterUpdaterAction = {
+  dataId: string | string[];
 };
-export function applyCPUFilter(dataId: string | string[]): ApplyCPUFilterAction;
+export function applyCPUFilter(
+  dataId: string | string[]
+): Merge<ApplyCPUFilterUpdaterAction, {type: ActionTypes.APPLY_CPU_FILTER}>;
 
-export type ToggleEditorVisibilityAction = {
-  type: ActionTypes.TOGGLE_EDITOR_VISIBILITY;
-};
+export type ToggleEditorVisibilityUpdaterAction = {};
+export function toggleEditorVisibility(): Merge<
+  ToggleEditorVisibilityUpdaterAction,
+  {type: ActionTypes.TOGGLE_EDITOR_VISIBILITY}
+>;
 
-export function toggleEditorVisibility(): ToggleEditorVisibilityAction;
-export type LoadFileSuccessAction = {
-  type: ActionTypes.LOAD_FILES_SUCCESS;
-  result: any;
-};
-export function loadFileSuccess(): LoadFileSuccessAction;
-
-export type LoadNextFileAction = {
-  type: ActionTypes.LOAD_NEXT_FILE;
-  fileCache: any;
-  filesToLoad: any;
-  totalCount: any;
-  onFinish: any;
+export type LoadNextFileUpdaterAction = {
+  fileCache: FileCacheItem[];
+  filesToLoad: FileList[];
+  totalCount: number;
+  onFinish: function;
 };
 export function loadNextFile(payload: {
-  fileCache: any;
-  filesToLoad: any;
-  totalCount: any;
-  onFinish: any;
-}): LoadNextFileAction;
+  fileCache: FileCacheItem[];
+  filesToLoad: FileList[];
+  totalCount: number;
+  onFinish: function;
+}): Merge<LoadNextFileUpdaterAction, {type: ActionTypes.LOAD_NEXT_FILE}>;
+
+export type LoadFileSuccessUpdaterAction = {
+  result: AddDataToMaoPayload[];
+};
+export function loadFileSuccess(
+  result: AddDataToMaoPayload[]
+): Merge<LoadFileSuccessUpdaterAction, {type: ActionTypes.LOAD_FILES_SUCCESS}>;
+
+export type loadFilesErrUpdaterAction = {
+  error: any;
+};
+export function loadFilesErr(
+  error: any
+): Merge<loadFilesErrUpdaterAction, {type: ActionTypes.LOAD_FILES_ERR}>;

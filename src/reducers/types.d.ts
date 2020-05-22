@@ -1,8 +1,12 @@
 
+import {ParsedConfig} from '../schemas';
+
 export type RGBColor = [number, number, number];
 export type RGBAColor = [number, number, number, number];
+export type HexColor = string; // this is the best tpescript can do at the moment
+export type Millisecond = number;
 
-export type KeplerField = {
+export type Field = {
   analyzerType: string;
   id: string;
   name: string;
@@ -15,7 +19,7 @@ export type KeplerField = {
 /**
  * Input dataest parsed to addDataToMap
  */
-export type KeplerProtoDataset = {
+export interface ProtoDataset {
   info: {
     id: string;
     label: string;
@@ -33,3 +37,15 @@ export type KeplerProtoDataset = {
   // table-injected metadata
   metadata?: object;
 };
+
+export type AddDaataToMapOptions = {
+  centerMap?: boolean;
+  readOnly?: boolean;
+  keepExistingConfig?: boolean;
+};
+
+export type AddDataToMaoPayload = {
+  datasets: ProtoDataset[];
+  options: AddDaataToMapOptions;
+  config: ParsedConfig;
+}

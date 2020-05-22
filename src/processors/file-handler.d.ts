@@ -18,46 +18,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import colorbrewer from 'colorbrewer';
-import {VizColorPalette} from './custom-color-ranges';
+import {ProtoDataset, AddDataToMaoPayload} from 'reducers/types';
 
-// Add colorbrewer color schemes (Data Science requirement)
-// See http://colorbrewer2.org/
-
-const colorBrewerMap = Object.entries(colorbrewer.schemeGroups).reduce(
-  (accu, [type, palettes]) => ({
-    ...accu,
-    ...palettes.reduce(
-      (group, name) => ({
-        ...group,
-        [name]: type
-      }),
-      {}
-    )
-  }),
-  {}
-);
-
-const colorRanges = [...VizColorPalette];
-
-for (const [keyName, colorScheme] of Object.entries(colorbrewer)) {
-  if (keyName !== 'schemeGroups') {
-    for (const [lenKey, colors] of Object.entries(colorScheme)) {
-      colorRanges.push({
-        name: `ColorBrewer ${keyName}-${lenKey}`,
-        type: colorBrewerMap[keyName],
-        category: 'ColorBrewer',
-        colors
-      });
-    }
-  }
-}
-
-export const COLOR_RANGES = colorRanges;
-
-export const DefaultColorRange = colorRanges.find(({name}) => name === 'Global Warming') || {
-  name: 'Global Warming',
-  type: 'SEQ',
-  category: 'Uber',
-  colors: ['#5A1846', '#900C3F', '#C70039', '#E3611C', '#F1920E', '#FFC300']
+export type FileCacheItem = {
+  data: any;
+  info: {
+    label: string;
+    format: string;
+  };
 };
+
+export function readFile(payload: {
+  file: File;
+  fileCache: FileCacheItem[];
+}): Promise<FileCacheItem[]>;
+export function getFileHandler(fileBlob: File): {handler: function; format: string};
+export function filesToDataPayload(fileCache: FileCacheItem[]): AddDataToMaoPayload[];

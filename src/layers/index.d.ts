@@ -1,31 +1,44 @@
-import {RGBColor, RGBAColor, KeplerField} from '../reducers/types';
+import {RGBColor, RGBAColor, Field, Datasets} from '../reducers/types';
+import {Dataset} from '../reducers/vis-state-updaters';
+import {LayerTextLabel, ColorRange, ColorUI} from './layer-factory';
+
+export type LayerVisConfig = {
+  opacity: number;
+  colorRange: ColorRange;
+};
+
+export type LayerColumns = {
+  [key: string]: {value: string | null; fieldIdx: number; optional: boolean}
+};
+export type VisualChannelDomain = number[] | string[];
+export type VisualChannelField = Field | null;
 
 export type LayerConfig = {
   dataId: string | null;
   label: string;
   color: RGBColor;
 
-  columns: any;
+  columns: LayerColumns;
   isVisible: boolean;
   isConfigActive: boolean;
   highlightColor: RGBColor | RGBAColor;
   hidden: boolean;
 
-  colorField: KeplerField | null;
-  colorDomain: any;
+  colorField: VisualChannelField;
+  colorDomain: VisualChannelDomain;
   colorScale: string;
 
   // color by size, domain is set by filters, field, scale type
-  sizeDomain: any;
+  sizeDomain: VisualChannelDomain;
   sizeScale: string;
-  sizeField: KeplerField | null;
+  sizeField: VisualChannelField;
 
-  visConfig: any;
-  textLabel: any;
+  visConfig: LayerVisConfig;
+  textLabel: LayerTextLabel[];
 
   colorUI: {
-    color: any;
-    colorRange: any;
+    color: ColorUI;
+    colorRange: ColorUI;
   };
   animation: {
     enabled: boolean;
@@ -34,8 +47,16 @@ export type LayerConfig = {
 
 export class Layer {
   id: string;
+  type: string;
   config: LayerConfig;
+  visConfigSettings: any;
+  hasAllColumns(): boolean; 
+  updateLayerConfig(p: Partial<LayerConfig>): Layer;
+  updateLayerVisualChannel(dataset: Dataset, channel: string): Layer;
+  shouldCalculateLayerData(props: string[]): boolean;
+  formatLayerData(datasets: Datasets, oldLayerData?: any);
 }
+
 export const LayerClasses: {
   point: Layer;
   arc: Layer;
